@@ -4,7 +4,9 @@
  */
 package com.yohandev.personalblog.config;
 
+import com.yohandev.personalblog.repositories.TagRepository;
 import com.yohandev.personalblog.repositories.UserRepository;
+import com.yohandev.personalblog.services.TagServices;
 import com.yohandev.personalblog.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +17,16 @@ public class Services {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+    
     @Bean
     public UserServices userServices() {
         return new UserServices(userRepository);
+    }
+    
+    @Bean
+    public TagServices tagServices() {
+        return new TagServices(tagRepository);
     }
 }

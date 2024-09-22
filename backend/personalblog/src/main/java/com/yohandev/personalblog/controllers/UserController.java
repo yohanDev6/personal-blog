@@ -9,7 +9,6 @@ import com.yohandev.personalblog.dtos.UserResDTO;
 import com.yohandev.personalblog.dtos.UserUpdateDTO;
 import com.yohandev.personalblog.services.UserServices;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
