@@ -5,6 +5,7 @@
 package com.yohandev.personalblog.services;
 
 import com.yohandev.personalblog.dtos.UserReqDTO;
+import com.yohandev.personalblog.dtos.UserUpdateDTO;
 import com.yohandev.personalblog.model.UserModel;
 import com.yohandev.personalblog.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -49,27 +50,29 @@ public class UserServices {
         return userRepository.findAll();
     }
 
-    public UserModel update(long id, UserModel updatedUser) {
-        Optional<UserModel> existingUser = userRepository.findById(id);
+    public UserModel update(UserUpdateDTO userUpdateDTO) {
+        Optional<UserModel> existingUser = userRepository.findById(userUpdateDTO.id());
 
         if (existingUser.isPresent()) {
             UserModel userToUpdate = existingUser.get();
 
-            userToUpdate.setName(updatedUser.getName());
-            userToUpdate.setEmail(updatedUser.getEmail());
-            userToUpdate.setIsBlocked(updatedUser.getIsBlocked());
-            userToUpdate.setIsVerified(updatedUser.getIsVerified());
-            userToUpdate.setIsAdmin(updatedUser.getIsAdmin());
+            userToUpdate.setName(userUpdateDTO.name());
+            userToUpdate.setEmail(userUpdateDTO.email());
+            userToUpdate.setIsBlocked(userUpdateDTO.isBlocked());
+            userToUpdate.setIsVerified(userUpdateDTO.isVerified());
+            userToUpdate.setIsAdmin(userUpdateDTO.isAdmin());
 
             return userRepository.save(userToUpdate);
         } else {
-            throw new EntityNotFoundException("User with ID " + id + " not found.");
+            throw new EntityNotFoundException("User with ID " + userUpdateDTO.id() + " not found.");
         }
     }
 
     public void delete(long id) {
         if (id > 0) {
             userRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Invalid id");
         }
     }
 

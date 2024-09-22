@@ -6,6 +6,9 @@ package com.yohandev.personalblog.dtos;
 
 import com.yohandev.personalblog.model.UserModel;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  *
  * @author Yohan
@@ -28,5 +31,11 @@ public record UserResDTO(
                 userModel.getIsBlocked(),
                 userModel.getIsVerified(),
                 userModel.getIsAdmin());
+    }
+
+    public static List<UserResDTO> convertToUserResDTOList(List<UserModel> userModels) {
+        return userModels.stream()
+                .map(UserResDTO::new) // Converte cada UserModel em UserResDTO
+                .collect(Collectors.toList());  // Coleta os resultados em uma lista
     }
 }
