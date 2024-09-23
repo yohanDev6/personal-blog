@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServices {
+public class UserServices extends Services {
 
     private final UserRepository userRepository;
 
@@ -27,12 +27,11 @@ public class UserServices {
         this.userRepository = userRepository;
     }
 
-    public void save(UserReqDTO userReqDTO) {
+    public void saveUser(UserReqDTO userReqDTO) {
         UserModel userModel = userReqDTO.convertDTOToObject();
 
         // Criptografar a senha
-        String password = encrypt(userModel.getPassword());
-        userModel.setPassword(password);
+        userModel.setPassword(encryptPassword(userModel.getPassword()));
 
         // Inserir a data atual
         LocalDateTime now = LocalDateTime.now();
@@ -41,42 +40,41 @@ public class UserServices {
         userRepository.save(userModel);
     }
 
-    public UserModel get(long id) {
+    public UserModel getUserById(long id) {
+        verifyId(id);
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
     }
 
-    public List<UserModel> getAll() {
+    public List<UserModel> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public UserModel update(UserUpdateDTO userUpdateDTO) {
-        Optional<UserModel> existingUser = userRepository.findById(userUpdateDTO.id());
+    public UserModel updateUser(UserUpdateDTO userUpdateDTO) {
+        verifyId(userUpdateDTO.id());
 
-        if (existingUser.isPresent()) {
-            UserModel userToUpdate = existingUser.get();
+        UserModel existingUser = userRepository.findById(userUpdateDTO.id())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            userToUpdate.setName(userUpdateDTO.name());
-            userToUpdate.setEmail(userUpdateDTO.email());
-            userToUpdate.setIsBlocked(userUpdateDTO.isBlocked());
-            userToUpdate.setIsVerified(userUpdateDTO.isVerified());
-            userToUpdate.setIsAdmin(userUpdateDTO.isAdmin());
+        existingUser.setName(userUpdateDTO.name());
+        existingUser.setEmail(userUpdateDTO.email());
+        existingUser.setIsBlocked(userUpdateDTO.isBlocked());
+        existingUser.setIsVerified(userUpdateDTO.isVerified());
+        existingUser.setIsAdmin(userUpdateDTO.isAdmin());
 
-            return userRepository.save(userToUpdate);
-        } else {
-            throw new EntityNotFoundException("User with ID " + userUpdateDTO.id() + " not found.");
-        }
+        return userRepository.save(existingUser);
     }
 
-    public void delete(long id) {
-        if (id > 0) {
-            userRepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("Invalid id");
-        }
+    public void deleteUser(long id) {
+        verifyId(id);
+        
+        UserModel user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        userRepository.delete(user);
     }
 
-    private String encrypt(String password) {
+    private String encryptPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

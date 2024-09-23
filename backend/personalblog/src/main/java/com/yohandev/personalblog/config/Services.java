@@ -4,8 +4,10 @@
  */
 package com.yohandev.personalblog.config;
 
+import com.yohandev.personalblog.repositories.ImageRepository;
 import com.yohandev.personalblog.repositories.TagRepository;
 import com.yohandev.personalblog.repositories.UserRepository;
+import com.yohandev.personalblog.services.ImageServices;
 import com.yohandev.personalblog.services.TagServices;
 import com.yohandev.personalblog.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class Services {
     @Autowired
     private TagRepository tagRepository;
     
+    @Autowired
+    private ImageRepository imageRepository;
+    
     @Bean
     public UserServices userServices() {
         return new UserServices(userRepository);
@@ -28,5 +33,10 @@ public class Services {
     @Bean
     public TagServices tagServices() {
         return new TagServices(tagRepository);
+    }
+    
+    @Bean
+    public ImageServices imageServices() {
+        return new ImageServices(imageRepository);
     }
 }

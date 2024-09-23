@@ -4,9 +4,12 @@
  */
 package com.yohandev.personalblog.controllers;
 
-import com.yohandev.personalblog.dtos.TagDTO;
-import com.yohandev.personalblog.services.TagServices;
+import com.yohandev.personalblog.dtos.image.ImageReqDTO;
+import com.yohandev.personalblog.dtos.image.ImageResDTO;
+import com.yohandev.personalblog.model.ImageModel;
+import com.yohandev.personalblog.services.ImageServices;
 import jakarta.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,63 +24,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("tag")
-public class TagController {
+@RequestMapping("image")
+public class ImageController {
 
     @Autowired
-    private TagServices tagServices;
+    private ImageServices imageServices;
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody TagDTO tagDTO) {
+    public ResponseEntity<String> saveImage(@RequestBody ImageReqDTO imageReqDTO) {
         try {
-            tagServices.saveTag(tagDTO);
-            return new ResponseEntity<>("Tag created successfully", HttpStatus.CREATED);
-        } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
+            imageServices.saveImage(imageReqDTO);
+            return new ResponseEntity<>("Image saved successfully", HttpStatus.CREATED);
+        } catch (IOException ioe) {
+            return new ResponseEntity<>(ioe.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTagById(@PathVariable long id) {
+    public ResponseEntity<?> getImageById(@PathVariable long id) {
         try {
-            TagDTO tagDTO = new TagDTO(tagServices.getTagById(id));
-            return new ResponseEntity<>(tagDTO, HttpStatus.OK);
-        } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.BAD_REQUEST);
+            ImageResDTO imageResDTO = new ImageResDTO(imageServices.getImageById(id));
+            return new ResponseEntity<>(imageResDTO, HttpStatus.OK);
+        } catch (IllegalArgumentException | EntityNotFoundException iae) {
+            HttpStatus status = (iae instanceof EntityNotFoundException) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(iae.getMessage(), status);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @GetMapping
-    public ResponseEntity<?> getAllTags(){
+    public ResponseEntity<?> getAllImages() {
         try {
-            List<TagDTO> tagsDTO = TagDTO.convertToTagDTOList(tagServices.getAllTags());
-            return new ResponseEntity<>(tagsDTO, HttpStatus.OK);
+            List<ImageResDTO> imageResDTOs = ImageResDTO.convertToUserResDTOList(imageServices.getAllImages());
+            return new ResponseEntity<>(imageResDTOs, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody TagDTO tagDTO){
+    public ResponseEntity<String> updateImage(@RequestBody ImageReqDTO imageReqDTO) {
         try {
-            tagServices.updateTag(tagDTO);
-            return new ResponseEntity<>("Tag updated successfully", HttpStatus.OK);
-        } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.BAD_REQUEST);
+            imageServices.updateImage(imageReqDTO);
+            return new ResponseEntity<>("Image updated successfully", HttpStatus.OK);
+        } catch (IllegalArgumentException | IOException iae) {
+            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable long id){
+    public ResponseEntity<String> deleteImage(@PathVariable long id) {
         try {
-            tagServices.deleteTag(id);
-            return new ResponseEntity<>("Tag deleted successfully", HttpStatus.OK);
+            imageServices.deleteImage(id);
+            return new ResponseEntity<>("Image deleted successfully", HttpStatus.OK);
         } catch (IllegalArgumentException iae) {
             return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

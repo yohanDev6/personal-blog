@@ -32,14 +32,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> save(@RequestBody UserReqDTO userReqDTO) {
         try {
-            if (userReqDTO != null) {
-                userServices.save(userReqDTO);
-                return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<>("User can not be null", HttpStatus.BAD_REQUEST);
-            }
+            userServices.saveUser(userReqDTO);
+            return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
         } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>("Illegal argument: " + iae.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -48,10 +44,10 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable long id) {
         try {
-            UserResDTO userResDTO = new UserResDTO(userServices.get(id));
+            UserResDTO userResDTO = new UserResDTO(userServices.getUserById(id));
             return new ResponseEntity<>(userResDTO, HttpStatus.OK);
         } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>("User not found: " + enfe.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -60,7 +56,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getAllUsers(){
         try {
-            List<UserResDTO> users = UserResDTO.convertToUserResDTOList(userServices.getAll());
+            List<UserResDTO> users = UserResDTO.convertToUserResDTOList(userServices.getAllUsers());
             return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,14 +66,10 @@ public class UserController {
     @PutMapping
     public ResponseEntity<String> updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
         try {
-            if (userUpdateDTO.id() > 0) {
-                userServices.update(userUpdateDTO);
-                return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Invalid id", HttpStatus.BAD_REQUEST);
-            }
+            userServices.updateUser(userUpdateDTO);
+            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
         } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>("User not found: " + enfe.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -86,7 +78,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         try {
-            userServices.delete(id);
+            userServices.deleteUser(id);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         } catch (IllegalArgumentException iae) {
             return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);

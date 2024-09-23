@@ -14,7 +14,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TagServices {
+public class TagServices extends Services{
     
     private final TagRepository tagRepository;
     
@@ -22,10 +22,12 @@ public class TagServices {
         this.tagRepository = tagRepository;
     }
     
-    public void save(TagDTO tagDTO) {
+    public void saveTag(TagDTO tagDTO) {
         TagModel tagModel = new TagModel();
+        
         tagModel.setId(tagDTO.id());
         tagModel.setName(tagDTO.name());
+        
         if(isNameValid(tagModel)) {
             tagRepository.save(tagModel);
         } else {
@@ -42,42 +44,35 @@ public class TagServices {
         }
     }
     
-    public TagModel get(long id) {
-        if(id > 0) {
-            Optional<TagModel> tagModel = tagRepository.findById(id);
-            if(tagModel.isPresent()) {
-                return tagModel.get();
-            } else {
-                throw new EntityNotFoundException("Tag not found");
-            }
-        } else {
-            throw new IllegalArgumentException("This id is not valid");
-        }
-    }
-    
-    public List<TagModel> getAll() {
-        return tagRepository.findAll();
-    }
-    
-    public TagModel update(TagDTO tagDTO){
-        Optional<TagModel> tagModel = tagRepository.findById(tagDTO.id());
+    public TagModel getTagById(long id) {
+        verifyId(id);
         
-        if(tagModel.isPresent()) {
-            TagModel tagModelExisting = tagModel.get();
-            
-            tagModelExisting.setName(tagDTO.name());
-            
-            return tagRepository.save(tagModelExisting);
+        Optional<TagModel> tag = tagRepository.findById(id);
+        
+        if (tag.isPresent()) {
+            return tag.get();
         } else {
             throw new EntityNotFoundException("Tag not found");
         }
     }
     
-    public void delete(long id){
-        if(id > 0) {
-            tagRepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("Invalid id");
-        }
+    public List<TagModel> getAllTags() {
+        return tagRepository.findAll();
+    }
+    
+    public TagModel updateTag(TagDTO tagDTO){
+        verifyId(tagDTO.id());
+        
+        TagModel tag = tagRepository.findById(tagDTO.id())
+                .orElseThrow(() -> new RuntimeException("Tag not found"));
+        
+        return tagRepository.save(tag);
+    }
+    
+    public void deleteTag(long id){
+        verifyId(id);
+        TagModel tag = tagRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tag not found"));
+        tagRepository.deleteById(id);
     }
 }
