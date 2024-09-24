@@ -5,29 +5,29 @@
 package com.yohandev.personalblog.dtos;
 
 import com.yohandev.personalblog.model.UserModel;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-/**
- *
- * @author Yohan
- */
 public record UserReqDTO(
-        @NotNull
-        String name,
-        @NotNull
-        String email,
-        @NotNull
-        String password) {
+
+    @NotNull(message = "Name is required")
+    @Size(min = 2, max = 64, message = "Name must be between 2 and 50 characters")
+    String name,
+
+    @NotNull(message = "Email is required")
+    @Email(message = "Email should be valid")
+    String email,
+
+    @NotNull(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    String password) {
 
     public UserModel convertDTOToObject() {
         UserModel userModel = new UserModel();
-        
         userModel.setName(this.name);
         userModel.setEmail(this.email);
         userModel.setPassword(this.password);
-        
         return userModel;
     }
-    
-    
 }

@@ -5,7 +5,9 @@
 package com.yohandev.personalblog.dtos;
 
 import com.yohandev.personalblog.model.UserModel;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  *
@@ -15,11 +17,14 @@ public record UserUpdateDTO(
         @NotNull
         long id,
         
-        @NotNull
+        @NotNull(message = "Name is required")
+        @Size(min = 2, max = 64, message = "Name must be between 2 and 50 characters")
         String name,
         
-        @NotNull
+        @NotNull(message = "Email is required")
+        @Email(message = "Email should be valid")
         String email,
+        
         boolean isBlocked,
         boolean isVerified,
         boolean isAdmin) {

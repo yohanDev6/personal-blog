@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public record TagDTO(
         long id,
         
-        @NotNull
+        @NotNull(message = "Tag name is required")
         NameTag name) {
 
     public TagDTO(TagModel tagModel) {

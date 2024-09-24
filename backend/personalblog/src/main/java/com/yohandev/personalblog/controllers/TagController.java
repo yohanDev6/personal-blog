@@ -6,7 +6,6 @@ package com.yohandev.personalblog.controllers;
 
 import com.yohandev.personalblog.dtos.TagDTO;
 import com.yohandev.personalblog.services.TagServices;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,59 +28,31 @@ public class TagController {
 
     @PostMapping
     public ResponseEntity<String> save(@RequestBody TagDTO tagDTO) {
-        try {
-            tagServices.saveTag(tagDTO);
-            return new ResponseEntity<>("Tag created successfully", HttpStatus.CREATED);
-        } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        tagServices.saveTag(tagDTO);
+        return new ResponseEntity<>("Tag created successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTagById(@PathVariable long id) {
-        try {
-            TagDTO tagDTO = new TagDTO(tagServices.getTagById(id));
-            return new ResponseEntity<>(tagDTO, HttpStatus.OK);
-        } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        TagDTO tagDTO = new TagDTO(tagServices.getTagById(id));
+        return new ResponseEntity<>(tagDTO, HttpStatus.OK);
     }
-    
+
     @GetMapping
-    public ResponseEntity<?> getAllTags(){
-        try {
-            List<TagDTO> tagsDTO = TagDTO.convertToTagDTOList(tagServices.getAllTags());
-            return new ResponseEntity<>(tagsDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> getAllTags() {
+        List<TagDTO> tagsDTO = TagDTO.convertToTagDTOList(tagServices.getAllTags());
+        return new ResponseEntity<>(tagsDTO, HttpStatus.OK);
     }
-    
+
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody TagDTO tagDTO){
-        try {
-            tagServices.updateTag(tagDTO);
-            return new ResponseEntity<>("Tag updated successfully", HttpStatus.OK);
-        } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> update(@RequestBody TagDTO tagDTO) {
+        tagServices.updateTag(tagDTO);
+        return new ResponseEntity<>("Tag updated successfully", HttpStatus.OK);
     }
-    
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable long id){
-        try {
-            tagServices.deleteTag(id);
-            return new ResponseEntity<>("Tag deleted successfully", HttpStatus.OK);
-        } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> update(@PathVariable long id) {
+        tagServices.deleteTag(id);
+        return new ResponseEntity<>("Tag deleted successfully", HttpStatus.OK);
     }
 }

@@ -4,13 +4,17 @@
  */
 package com.yohandev.personalblog.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -24,11 +28,10 @@ public class UserModel {
     
     private String name, email, password;
     
-    private boolean isBlocked;
+    private boolean isBlocked, isVerified, isAdmin;
     
-    private boolean isVerified;
-    
-    private boolean isAdmin;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DonationModel> donations = new ArrayList<>();
     
     public UserModel(){
         
@@ -60,8 +63,6 @@ public class UserModel {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-    
 
     public String getName() {
         return name;
@@ -109,5 +110,23 @@ public class UserModel {
 
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public List<DonationModel> getDonations() {
+        return donations;
+    }
+
+    public void setDonations(List<DonationModel> donations) {
+        this.donations = donations;
+    }
+    
+    public void addDonation(DonationModel donation) {
+        donations.add(donation);
+        donation.setUser(this);
+    }
+
+    public void removeDonation(DonationModel donation) {
+        donations.remove(donation);
+        donation.setUser(null);
     }
 }

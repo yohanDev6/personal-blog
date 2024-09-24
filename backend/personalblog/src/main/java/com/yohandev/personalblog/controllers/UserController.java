@@ -4,11 +4,17 @@
  */
 package com.yohandev.personalblog.controllers;
 
+import com.yohandev.personalblog.dtos.DonationReqDTO;
+import com.yohandev.personalblog.dtos.DonationResDTO;
 import com.yohandev.personalblog.dtos.UserReqDTO;
 import com.yohandev.personalblog.dtos.UserResDTO;
 import com.yohandev.personalblog.dtos.UserUpdateDTO;
+import com.yohandev.personalblog.model.DonationModel;
+import com.yohandev.personalblog.services.DonationServices;
 import com.yohandev.personalblog.services.UserServices;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,67 +29,67 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class UserController {
 
     @Autowired
     private UserServices userServices;
 
+    @Autowired
+    private DonationServices donationServices;
+
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody UserReqDTO userReqDTO) {
-        try {
-            userServices.saveUser(userReqDTO);
-            return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
-        } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> save(@Valid @RequestBody UserReqDTO userReqDTO) {
+        userServices.saveUser(userReqDTO);
+        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable long id) {
-        try {
-            UserResDTO userResDTO = new UserResDTO(userServices.getUserById(id));
-            return new ResponseEntity<>(userResDTO, HttpStatus.OK);
-        } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        UserResDTO userResDTO = new UserResDTO(userServices.getUserById(id));
+        return new ResponseEntity<>(userResDTO, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers(){
-        try {
-            List<UserResDTO> users = UserResDTO.convertToUserResDTOList(userServices.getAllUsers());
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error ocurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> getAllUsers() {
+        List<UserResDTO> users = UserResDTO.convertToUserResDTOList(userServices.getAllUsers());
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
-    
+
     @PutMapping
-    public ResponseEntity<String> updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
-        try {
-            userServices.updateUser(userUpdateDTO);
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        } catch (EntityNotFoundException enfe) {
-            return new ResponseEntity<>(enfe.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO) {
+        userServices.updateUser(userUpdateDTO);
+        return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
-        try {
-            userServices.deleteUser(id);
-            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
-        } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        userServices.deleteUser(id);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+    }
+
+    //donations
+    @PostMapping("/users/{userId}/donations")
+    public ResponseEntity<String> saveDonation(@PathVariable Long userId,@Valid @RequestBody DonationReqDTO donationReqDTO) throws IOException {
+        donationServices.saveDonation(userServices.getUserById(userId), donationReqDTO);
+        return new ResponseEntity<>("Donation created successfully", HttpStatus.CREATED);
+    }
+    
+    @GetMapping("/users/{userId}/donations")
+    public ResponseEntity<?> getDonationsByUser(@PathVariable long userId, @PathVariable long id) {
+        List<DonationResDTO> donations = DonationResDTO.convertToDonationResDTOList(donationServices.getDonationsByUser(userId));
+        return new ResponseEntity<>(donations, HttpStatus.OK);
+    }
+    
+    @PutMapping("/users/{userId}/donations")
+    public ResponseEntity<String> updateDonation(@PathVariable long userId, @Valid @RequestBody DonationReqDTO donationReqDTO) throws IOException {
+        donationServices.updateDonation(userId, donationReqDTO);
+        return new ResponseEntity<>("Donation updated successfully", HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/users/{userId}/donations/{id}")
+    public ResponseEntity<String> deleteDonation(@PathVariable long userId, @PathVariable long id) {
+        donationServices.deleteDonation(userId, id);
+        return new ResponseEntity<>("Donation deleted successfully", HttpStatus.OK);
     }
 }
