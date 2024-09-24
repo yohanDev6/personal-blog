@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Size;
 public record UserReqDTO(
 
     @NotNull(message = "Name is required")
-    @Size(min = 2, max = 64, message = "Name must be between 2 and 50 characters")
+    @Size(min = 3, max = 64, message = "Name must be between 3 and 64 characters")
     String name,
 
     @NotNull(message = "Email is required")
@@ -24,6 +24,10 @@ public record UserReqDTO(
     String password) {
 
     public UserModel convertDTOToObject() {
+        if (name == "" || email == "" || password == "") {
+            throw new IllegalArgumentException("User can not be null");
+        }
+        
         UserModel userModel = new UserModel();
         userModel.setName(this.name);
         userModel.setEmail(this.email);

@@ -4,6 +4,8 @@
  */
 package com.yohandev.personalblog.services;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author Yohan
@@ -13,5 +15,9 @@ public abstract class Services {
         if (id <= 0) {
             throw new IllegalArgumentException(id + " is an invalid ID");
         }
+    }
+    
+    protected LocalDateTime setDateTimeNow() {
+        return LocalDateTime.now();
     }
 }

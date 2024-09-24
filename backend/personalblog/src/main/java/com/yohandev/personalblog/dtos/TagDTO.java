@@ -4,8 +4,8 @@
  */
 package com.yohandev.personalblog.dtos;
 
-import com.yohandev.personalblog.model.tag.NameTag;
-import com.yohandev.personalblog.model.tag.TagModel;
+import com.yohandev.personalblog.model.NameTag;
+import com.yohandev.personalblog.model.TagModel;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;

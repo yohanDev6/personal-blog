@@ -9,10 +9,8 @@ import com.yohandev.personalblog.dtos.UserUpdateDTO;
 import com.yohandev.personalblog.model.UserModel;
 import com.yohandev.personalblog.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -33,9 +31,8 @@ public class UserServices extends Services {
         // Criptografar a senha
         userModel.setPassword(encryptPassword(userModel.getPassword()));
 
-        // Inserir a data atual
-        LocalDateTime now = LocalDateTime.now();
-        userModel.setCreatedAt(now);
+        // Inserir data e hora da criação
+        userModel.setCreatedAt(setDateTimeNow());
 
         userRepository.save(userModel);
     }

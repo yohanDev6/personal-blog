@@ -5,9 +5,8 @@
 package com.yohandev.personalblog.repositories;
 
 import com.yohandev.personalblog.model.DonationModel;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DonationRepository extends JpaRepository<DonationModel, Long>{
-    List<DonationModel> findByUserId();
+
 }

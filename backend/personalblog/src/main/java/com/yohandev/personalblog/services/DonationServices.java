@@ -10,7 +10,6 @@ import com.yohandev.personalblog.model.UserModel;
 import com.yohandev.personalblog.repositories.DonationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,7 @@ public class DonationServices extends Services {
         DonationModel donation = donationReqDTO.convertDTOToObject();
         donation.setUser(user);
         
-        LocalDateTime now = LocalDateTime.now();
-        donation.setCreatedAt(now);
+        donation.setCreatedAt(setDateTimeNow());
         
         donationRepository.save(donation);
     }

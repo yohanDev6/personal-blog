@@ -5,8 +5,8 @@
 package com.yohandev.personalblog.services;
 
 import com.yohandev.personalblog.dtos.TagDTO;
-import com.yohandev.personalblog.model.tag.NameTag;
-import com.yohandev.personalblog.model.tag.TagModel;
+import com.yohandev.personalblog.model.NameTag;
+import com.yohandev.personalblog.model.TagModel;
 import com.yohandev.personalblog.repositories.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;

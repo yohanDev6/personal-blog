@@ -6,6 +6,8 @@ package com.yohandev.personalblog.controllers;
 
 import com.yohandev.personalblog.dtos.TagDTO;
 import com.yohandev.personalblog.services.TagServices;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,8 @@ public class TagController {
     private TagServices tagServices;
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody TagDTO tagDTO) {
+    @Transactional
+    public ResponseEntity<String> save(@Valid @RequestBody TagDTO tagDTO) {
         tagServices.saveTag(tagDTO);
         return new ResponseEntity<>("Tag created successfully", HttpStatus.CREATED);
     }
@@ -45,12 +48,14 @@ public class TagController {
     }
 
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody TagDTO tagDTO) {
+    @Transactional
+    public ResponseEntity<String> update(@Valid @RequestBody TagDTO tagDTO) {
         tagServices.updateTag(tagDTO);
         return new ResponseEntity<>("Tag updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<String> update(@PathVariable long id) {
         tagServices.deleteTag(id);
         return new ResponseEntity<>("Tag deleted successfully", HttpStatus.OK);

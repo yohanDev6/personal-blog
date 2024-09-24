@@ -4,7 +4,6 @@
  */
 package com.yohandev.personalblog.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,22 +14,22 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "donations")
+@Table(name = "Donations")
 public class DonationModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private float value;
     private LocalDateTime createdAt;
     private byte[] receipt;
-    
-    @Column(name = "user_id")
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserModel user;
-    
-    public DonationModel(){
-        
+
+    public DonationModel() {
+
     }
 
     public DonationModel(long id, float value, LocalDateTime createdAt, UserModel user, byte[] receipt) {

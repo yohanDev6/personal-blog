@@ -9,16 +9,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- *
- * @author Yohan
- */
 public record UserUpdateDTO(
         @NotNull
         long id,
         
         @NotNull(message = "Name is required")
-        @Size(min = 2, max = 64, message = "Name must be between 2 and 50 characters")
+        @Size(min = 3, max = 64, message = "Name must be between 2 and 64 characters")
         String name,
         
         @NotNull(message = "Email is required")

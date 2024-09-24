@@ -5,7 +5,6 @@
 package com.yohandev.personalblog.model;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,11 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "Users")
 public class UserModel {
     
     @Id
@@ -31,7 +29,7 @@ public class UserModel {
     private boolean isBlocked, isVerified, isAdmin;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DonationModel> donations = new ArrayList<>();
+    private List<DonationModel> donations;
     
     public UserModel(){
         

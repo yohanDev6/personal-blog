@@ -5,33 +5,33 @@
 package com.yohandev.personalblog.dtos;
 
 import com.yohandev.personalblog.model.DonationModel;
-import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 public record DonationReqDTO(
         long id,
-
         @NotNull(message = "Donation value is required")
         @Positive(message = "Donation value must be greater than zero")
         float value,
-
-        @NotNull(message = "Receipt is required")
-        @Size(min = 1, max = 1048576, message = "Receipt size must be between 1 byte and 1 MB") // 1MB limit
         MultipartFile receipt,
-
         @NotNull(message = "User ID is required")
         long userId) {
 
     public DonationModel convertDTOToObject() throws IOException {
         DonationModel donation = new DonationModel();
+
+        if (receipt != null) {
+            if (receipt.getSize() > 2097152) {  // 2MB em bytes
+                throw new IllegalArgumentException("Receipt size must not exceed 2 MB");
+            } else if (receipt != null && receipt.getBytes() != null) {
+                donation.setReceipt(receipt.getBytes());
+            }
+        }
+
         donation.setValue(value);
-        donation.setReceipt(receipt.getBytes());
         return donation;
     }
 }
