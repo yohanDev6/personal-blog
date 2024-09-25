@@ -5,9 +5,11 @@
 package com.yohandev.personalblog.config;
 
 import com.yohandev.personalblog.repositories.DonationRepository;
+import com.yohandev.personalblog.repositories.PostRepository;
 import com.yohandev.personalblog.repositories.TagRepository;
 import com.yohandev.personalblog.repositories.UserRepository;
 import com.yohandev.personalblog.services.DonationServices;
+import com.yohandev.personalblog.services.PostServices;
 import com.yohandev.personalblog.services.TagServices;
 import com.yohandev.personalblog.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class Services {
     @Autowired
     private DonationRepository donationRepository;
     
+    @Autowired
+    private PostRepository postRepository;
+    
     @Bean
     public UserServices userServices() {
         return new UserServices(userRepository);
@@ -38,5 +43,10 @@ public class Services {
     @Bean
     public DonationServices donationServices() {
         return new DonationServices(donationRepository);
+    }
+    
+    @Bean
+    public PostServices postServices() {
+        return new PostServices(postRepository);
     }
 }

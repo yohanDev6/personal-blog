@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,7 +30,10 @@ public class UserModel {
     private boolean isBlocked, isVerified, isAdmin;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DonationModel> donations;
+    private List<DonationModel> donations = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostModel> posts = new ArrayList<>();
     
     public UserModel(){
         
@@ -126,5 +130,23 @@ public class UserModel {
     public void removeDonation(DonationModel donation) {
         donations.remove(donation);
         donation.setUser(null);
+    }
+
+    public List<PostModel> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostModel> posts) {
+        this.posts = posts;
+    }
+    
+    public void addPost(PostModel post) {
+        posts.add(post);
+        post.setUser(this);
+    }
+
+    public void removeDonation(PostModel post) {
+        donations.remove(post);
+        post.setUser(null);
     }
 }

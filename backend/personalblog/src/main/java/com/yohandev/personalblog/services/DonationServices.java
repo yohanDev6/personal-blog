@@ -8,7 +8,6 @@ import com.yohandev.personalblog.dtos.DonationReqDTO;
 import com.yohandev.personalblog.model.DonationModel;
 import com.yohandev.personalblog.model.UserModel;
 import com.yohandev.personalblog.repositories.DonationRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -57,11 +56,5 @@ public class DonationServices extends Services {
                 .orElseThrow(() -> new RuntimeException("Donation not found"));
         
         donationRepository.delete(donation);
-    }
-    
-    private void verifyUserReference(long userId, long id) {
-        if (id != userId) {
-            throw new IllegalArgumentException("This donation does not pertence to this user");
-        }
     }
 }

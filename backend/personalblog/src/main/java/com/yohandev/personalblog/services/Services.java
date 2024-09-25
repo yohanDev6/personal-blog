@@ -20,4 +20,10 @@ public abstract class Services {
     protected LocalDateTime setDateTimeNow() {
         return LocalDateTime.now();
     }
+    
+    protected void verifyUserReference(long userId, long id) {
+        if (id != userId) {
+            throw new IllegalArgumentException("This entity does not pertence to this user");
+        }
+    }
 }
