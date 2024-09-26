@@ -145,8 +145,8 @@ public class UserModel {
         post.setUser(this);
     }
 
-    public void removeDonation(PostModel post) {
-        donations.remove(post);
+    public void removePost(PostModel post) {
+        posts.remove(post);
         post.setUser(null);
     }
 }

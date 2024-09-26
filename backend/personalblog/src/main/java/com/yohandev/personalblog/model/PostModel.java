@@ -4,14 +4,18 @@
  */
 package com.yohandev.personalblog.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -26,6 +30,9 @@ public class PostModel {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserModel user;
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostReferencesModel> postReferences = new ArrayList<>();
     
     public PostModel(){
         
@@ -86,6 +93,22 @@ public class PostModel {
     public void setUser(UserModel user) {
         this.user = user;
     }
+
+    public List<PostReferencesModel> getPostReferences() {
+        return postReferences;
+    }
+
+    public void setPostReferences(List<PostReferencesModel> postReferences) {
+        this.postReferences = postReferences;
+    }
     
-    
+    public void addPostReference(PostReferencesModel postReference) {
+        postReferences.add(postReference);
+        postReference.setPost(this);
+    }
+
+    public void removePost(PostReferencesModel postReference) {
+        postReferences.remove(postReference);
+        postReference.setPost(null);
+    }
 }
