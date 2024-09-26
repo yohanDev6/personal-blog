@@ -21,7 +21,7 @@ public abstract class Services {
         return LocalDateTime.now();
     }
     
-    protected void verifyUserReference(long userId, long id) {
+    protected void verifyFKRelation(long userId, long id) {
         if (id != userId) {
             throw new IllegalArgumentException("This entity does not pertence to this user");
         }

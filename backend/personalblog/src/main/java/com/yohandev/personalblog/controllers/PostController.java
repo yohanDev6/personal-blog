@@ -4,14 +4,17 @@
  */
 package com.yohandev.personalblog.controllers;
 
+import com.yohandev.personalblog.dtos.ImageReqDTO;
+import com.yohandev.personalblog.dtos.ImageResDTO;
 import com.yohandev.personalblog.dtos.PostDTO;
 import com.yohandev.personalblog.dtos.PostReferenceDTO;
-import com.yohandev.personalblog.model.UserModel;
+import com.yohandev.personalblog.services.ImageServices;
 import com.yohandev.personalblog.services.PostReferenceServices;
 import com.yohandev.personalblog.services.PostServices;
 import com.yohandev.personalblog.services.UserServices;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +40,9 @@ public class PostController {
     
     @Autowired
     private PostReferenceServices postReferenceService;
+    
+    @Autowired
+    private ImageServices imageServices;
     
     @PostMapping
     @Transactional
@@ -95,5 +101,30 @@ public class PostController {
     public ResponseEntity<String> deletePostReference(@RequestBody PostReferenceDTO postReferenceDTO, @PathVariable long postId) {
         postReferenceService.deletePostReference(postReferenceDTO, postId);
         return new ResponseEntity<>("Post Reference deleted successfully", HttpStatus.OK);
+    }
+    
+    @PostMapping("images")
+    @Transactional
+    public ResponseEntity<String> saveImage(@Valid @RequestBody ImageReqDTO imageReqDTO) throws IOException {
+        imageServices.saveImage(imageReqDTO, postServices.getPostById(imageReqDTO.postId()));
+        return new ResponseEntity<>("Image created successfully", HttpStatus.CREATED);
+    }
+    
+    @GetMapping("{postId}/images")
+    public ResponseEntity<?> getImagesByPost(@PathVariable long postId) {    
+        List<ImageResDTO> images = ImageResDTO.convertToImageResDTOList(imageServices.getImagesByPost(postServices.getPostById(postId)));
+        return new ResponseEntity<>(images, HttpStatus.OK);
+    }
+    
+    @PutMapping("{postId}/images")
+    public ResponseEntity<String> updateImage(@Valid @RequestBody ImageReqDTO imageReqDTO, @PathVariable long postId) throws IOException {
+        imageServices.updateImage(imageReqDTO, postId);
+        return new ResponseEntity<>("Image updated successfully", HttpStatus.OK);
+    }
+    
+    @DeleteMapping("{postId}/images")
+    public ResponseEntity<String> deleteImage(@RequestBody ImageReqDTO imageReqDTO, @PathVariable long postId) {
+        imageServices.deleteImage(imageReqDTO, postId);
+        return new ResponseEntity<>("Image deleted successfully", HttpStatus.OK);
     }
 }

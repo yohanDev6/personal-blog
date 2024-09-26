@@ -40,7 +40,7 @@ public class PostServices extends Services{
     
     public void updatePost(PostDTO postDTO, long userId) {
         verifyId(postDTO.id());
-        verifyUserReference(userId, postDTO.userId());
+        verifyFKRelation(userId, postDTO.userId());
         
         PostModel post = postRepository.findById(postDTO.id())
                 .orElseThrow(() -> new RuntimeException("Post not found"));
@@ -59,7 +59,7 @@ public class PostServices extends Services{
     public void deletePost(PostDTO postDTO, long userId) {
         verifyId(postDTO.id());
         
-        verifyUserReference(userId, postDTO.userId());
+        verifyFKRelation(userId, postDTO.userId());
         
         PostModel post = postRepository.findById(postDTO.id())
                 .orElseThrow(() -> new RuntimeException("Post not found"));

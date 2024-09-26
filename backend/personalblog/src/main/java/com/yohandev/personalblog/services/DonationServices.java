@@ -37,7 +37,7 @@ public class DonationServices extends Services {
     
     public void updateDonation(long userId, DonationReqDTO donation) throws IOException {
         verifyId(donation.id());
-        verifyUserReference(userId, donation.id());
+        verifyFKRelation(userId, donation.id());
         
         DonationModel existingDonation = donationRepository.findById(donation.id())
                 .orElseThrow(() -> new RuntimeException("Donation not found"));
@@ -50,7 +50,7 @@ public class DonationServices extends Services {
     
     public void deleteDonation(long userId, long id) {
         verifyId(id);
-        verifyUserReference(userId, id);
+        verifyFKRelation(userId, id);
         
         DonationModel donation = donationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Donation not found"));

@@ -40,7 +40,7 @@ public class PostReferenceServices extends Services{
     
     public void updatePostReference(PostReferenceDTO postReferenceDTO, long postId) {
         verifyId(postReferenceDTO.id());
-        verifyUserReference(postId, postReferenceDTO.postId());
+        verifyFKRelation(postId, postReferenceDTO.postId());
         
         PostReferencesModel postReference = postReferenceRepository.findById(postReferenceDTO.id())
                 .orElseThrow(() -> new RuntimeException("Post reference not found"));
@@ -53,7 +53,7 @@ public class PostReferenceServices extends Services{
     public void deletePostReference(PostReferenceDTO postReferenceDTO, long postId) {
         verifyId(postReferenceDTO.id());
         
-        verifyUserReference(postId, postReferenceDTO.postId());
+        verifyFKRelation(postId, postReferenceDTO.postId());
         
         PostReferencesModel post = postReferenceRepository.findById(postReferenceDTO.id())
                 .orElseThrow(() -> new RuntimeException("Post not found"));

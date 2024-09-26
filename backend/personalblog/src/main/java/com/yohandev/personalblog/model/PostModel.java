@@ -34,6 +34,9 @@ public class PostModel {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReferencesModel> postReferences = new ArrayList<>();
     
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImageModel> images;
+    
     public PostModel(){
         
     }
@@ -111,4 +114,14 @@ public class PostModel {
         postReferences.remove(postReference);
         postReference.setPost(null);
     }
+
+    public List<ImageModel> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ImageModel> images) {
+        this.images = images;
+    }
+    
+    
 }
