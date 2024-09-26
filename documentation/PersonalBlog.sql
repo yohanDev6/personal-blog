@@ -51,8 +51,8 @@ CREATE TABLE Comments (
 -- Tabela Like (Curtidas)
 CREATE TABLE Likes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT,
-    post_id BIGINT,
+    user_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
     created_at DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE
@@ -67,8 +67,8 @@ CREATE TABLE Tags (
 -- Tabela PostTags (Associação entre Post e Tags)
 CREATE TABLE PostTags (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    post_id BIGINT,
-    tag_id BIGINT,
+    post_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
     added_at DATETIME NOT NULL,
     FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE
@@ -79,7 +79,7 @@ CREATE TABLE Images (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     alt VARCHAR(255),
     content MEDIUMBLOB NOT NULL,
-    post_id BIGINT,
+    post_id BIGINT NOT NULL,
     FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE
 ) engine=InnoDB;
 
@@ -87,6 +87,6 @@ CREATE TABLE Images (
 CREATE TABLE PostReferences (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     content TEXT NOT NULL,
-    post_id BIGINT,
+    post_id BIGINT NOT NULL,
     FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE
 ) engine=InnoDB;
