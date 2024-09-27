@@ -20,6 +20,14 @@ public record TagDTO(
         @NotNull(message = "Tag name is required")
         NameTag name) {
 
+    public TagModel convertDTOToObject() {
+        TagModel tag = new TagModel();
+        
+        tag.setName(name);
+        
+        return tag;
+    }
+    
     public TagDTO(TagModel tagModel) {
         this(tagModel.getId(), tagModel.getName());
     }

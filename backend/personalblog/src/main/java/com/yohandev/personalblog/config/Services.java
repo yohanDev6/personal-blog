@@ -14,6 +14,7 @@ import com.yohandev.personalblog.services.DonationServices;
 import com.yohandev.personalblog.services.ImageServices;
 import com.yohandev.personalblog.services.PostReferenceServices;
 import com.yohandev.personalblog.services.PostServices;
+import com.yohandev.personalblog.services.PostTagServices;
 import com.yohandev.personalblog.services.TagServices;
 import com.yohandev.personalblog.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,11 @@ public class Services {
     @Bean
     public ImageServices imageServices() {
         return new ImageServices(imageRepository);
+    }
+    
+    //ManyToMany
+    @Bean
+    public PostTagServices postTagServices() {
+        return new PostTagServices(postRepository, tagRepository);
     }
 }

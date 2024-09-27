@@ -4,7 +4,9 @@
  */
 package com.yohandev.personalblog.controllers;
 
+import com.yohandev.personalblog.dtos.PostTagDTO;
 import com.yohandev.personalblog.dtos.TagDTO;
+import com.yohandev.personalblog.services.PostTagServices;
 import com.yohandev.personalblog.services.TagServices;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -28,6 +30,9 @@ public class TagController {
     @Autowired
     private TagServices tagServices;
 
+    @Autowired
+    private PostTagServices postTagServices;
+    
     @PostMapping
     @Transactional
     public ResponseEntity<String> save(@Valid @RequestBody TagDTO tagDTO) {
@@ -59,5 +64,17 @@ public class TagController {
     public ResponseEntity<String> update(@PathVariable long id) {
         tagServices.deleteTag(id);
         return new ResponseEntity<>("Tag deleted successfully", HttpStatus.OK);
+    }
+    
+    @PostMapping("posttags")
+    public ResponseEntity<String> addPostTag(@Valid @RequestBody PostTagDTO postTagDTO) {
+        postTagServices.savePostTag(postTagDTO.postId(), postTagDTO.tagId());
+        return new ResponseEntity<>("Post Tag relation saved successfully", HttpStatus.OK);
+    }
+    
+    @DeleteMapping("posttags")
+    public ResponseEntity<String> removePostTag(@Valid @RequestBody PostTagDTO postTagDTO) {
+        postTagServices.deletePostTag(postTagDTO.postId(), postTagDTO.tagId());
+        return new ResponseEntity<>("Post Tag relation removed successfully", HttpStatus.OK);
     }
 }

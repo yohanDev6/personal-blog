@@ -65,11 +65,10 @@ CREATE TABLE Tags (
 ) engine=InnoDB;
 
 -- Tabela PostTags (Associação entre Post e Tags)
-CREATE TABLE PostTags (
+CREATE TABLE Post_tag (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     post_id BIGINT NOT NULL,
     tag_id BIGINT NOT NULL,
-    added_at DATETIME NOT NULL,
     FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE
 ) engine=InnoDB;

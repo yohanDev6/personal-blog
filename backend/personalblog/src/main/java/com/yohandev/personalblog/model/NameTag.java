@@ -7,5 +7,6 @@ package com.yohandev.personalblog.model;
 public enum NameTag {
     HEALTH,
     TECHNOLOGY,
-    PROJECTS
+    PROJECTS;
+    
 }
