@@ -6,12 +6,14 @@ package com.yohandev.personalblog.config;
 
 import com.yohandev.personalblog.repositories.DonationRepository;
 import com.yohandev.personalblog.repositories.ImageRepository;
+import com.yohandev.personalblog.repositories.LikeRepository;
 import com.yohandev.personalblog.repositories.PostReferenceRepository;
 import com.yohandev.personalblog.repositories.PostRepository;
 import com.yohandev.personalblog.repositories.TagRepository;
 import com.yohandev.personalblog.repositories.UserRepository;
 import com.yohandev.personalblog.services.DonationServices;
 import com.yohandev.personalblog.services.ImageServices;
+import com.yohandev.personalblog.services.LikeServices;
 import com.yohandev.personalblog.services.PostReferenceServices;
 import com.yohandev.personalblog.services.PostServices;
 import com.yohandev.personalblog.services.PostTagServices;
@@ -40,6 +42,9 @@ public class Services {
     
     @Autowired
     private ImageRepository imageRepository;
+    
+    @Autowired
+    private LikeRepository likeRepository;
     
     @Bean
     public UserServices userServices() {
@@ -71,9 +76,15 @@ public class Services {
         return new ImageServices(imageRepository);
     }
     
+    @Bean
+    public LikeServices likeServices() {
+    	return new LikeServices(likeRepository);
+    }
+    
     //ManyToMany
     @Bean
     public PostTagServices postTagServices() {
         return new PostTagServices(postRepository, tagRepository);
     }
+    
 }

@@ -39,6 +39,9 @@ public class PostModel {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImageModel> images;
     
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeModel> likes = new ArrayList<>();
+    
     @ManyToMany
     @JoinTable(
             name = "post_tag",

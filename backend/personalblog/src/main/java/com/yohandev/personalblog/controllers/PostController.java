@@ -127,4 +127,5 @@ public class PostController {
         imageServices.deleteImage(imageReqDTO, postId);
         return new ResponseEntity<>("Image deleted successfully", HttpStatus.OK);
     }
+    
 }

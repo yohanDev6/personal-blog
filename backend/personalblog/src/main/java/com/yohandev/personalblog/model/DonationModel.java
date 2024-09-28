@@ -79,4 +79,5 @@ public class DonationModel {
     public void setReceipt(byte[] receipt) {
         this.receipt = receipt;
     }
+
 }
