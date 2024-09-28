@@ -38,6 +38,9 @@ public class UserModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LikeModel> likes = new ArrayList<>();
     
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentModel> comments = new ArrayList<>();
+    
     public UserModel(){
         
     }

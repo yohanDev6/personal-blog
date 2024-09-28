@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.yohandev</groupId>
 	<artifactId>personalblog</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>personalblog</name>
 	<description>A personal blog to publish texts on certain topics</description>
 	<url/>

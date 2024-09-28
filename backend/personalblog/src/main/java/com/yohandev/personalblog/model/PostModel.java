@@ -37,10 +37,13 @@ public class PostModel {
     private List<PostReferencesModel> postReferences = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImageModel> images;
+    private List<ImageModel> images = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LikeModel> likes = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentModel> comments = new ArrayList<>();
     
     @ManyToMany
     @JoinTable(
